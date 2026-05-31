@@ -39,4 +39,20 @@ describe('processPayment', () => {
   test('throws on negative amount', () => {
     expect(() => processPayment({ cardNumber: '5555555555554444', amount: -5 })).toThrow('Invalid amount');
   });
+
+  test('logs must not expose raw card number', () => {
+    const captured = [];
+    const orig = console.log;
+    console.log = (...args) => captured.push(JSON.stringify(args));
+    try {
+      processPayment({ cardNumber: '5555555555554444', amount: 99.99 });
+    } finally {
+      console.log = orig;
+    }
+    const allLogs = captured.join(' ');
+    // Full PAN must never appear in logs
+    expect(allLogs).not.toMatch(/5555555555554444/);
+    // Field must be named maskedCard not cardNumber — forces rename, not just masking
+    expect(allLogs).not.toMatch(/"cardNumber"/);
+  });
 });

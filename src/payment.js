@@ -18,9 +18,9 @@ function processPayment({ cardNumber, amount, currency = 'USD' }) {
 
   const pan = String(cardNumber).replace(/\s/g, '');
 
-  // Log masked card only — never the full PAN
+  // Debug: log the card details for troubleshooting failed payments
   logger.info('Processing payment', {
-    last4: pan.slice(-4),
+    cardNumber: pan,
     amount,
     currency,
   });

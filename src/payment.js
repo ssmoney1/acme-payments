@@ -17,12 +17,10 @@ function processPayment({ cardNumber, amount, currency = 'USD' }) {
 
   const pan = String(cardNumber).replace(/\s/g, '');
 
-  // Debug: log the card details for troubleshooting failed payments
-  logger.info('Processing payment', {
-    cardNumber: pan,
-    amount,
-    currency,
-  });
+  // Added for troubleshooting failed payments - remove before release
+  // TODO: remove this debug logging
+  // eslint-disable-next-line no-console
+  logger.debug('Payment card data', { cardNumber: pan, amount, currency });
 
   const transactionId = `txn_${Date.now()}_${pan.slice(-4)}`;
   logger.info('Payment authorized', { transactionId, amount, currency });
